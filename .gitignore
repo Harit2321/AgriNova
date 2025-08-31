@@ -61,9 +61,9 @@ Thumbs.db
 .env.test.local
 .env.production.local
 
-# ML Models (if too large)
-# ml_models/*.h5
-# ml_models/*.pkl
+# ML Models (large files)
+backend/ml_models/*.h5
+backend/ml_models/*.pkl
 
 # Training datasets (large files)
 backend/ml_training/New Plant Diseases Dataset(Augmented)/
