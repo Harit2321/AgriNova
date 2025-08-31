@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-xl shadow-lg">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Plant Disease Detection</h1>
+        <p class="text-gray-600 mt-2">Upload an image of a plant leaf to detect diseases.</p>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-6">
+            <label for="imageUpload" class="block text-gray-700 text-sm font-bold mb-2">Upload Leaf Image:</label>
+            <input type="file" name="image" id="imageUpload" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" required>
+        </div>
+        <button type="submit" class="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md transform hover:scale-105">Detect Disease</button>
+    </form>
+    {% if prediction %}
+    <div class="mt-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-800">Prediction Result</h2>
+        <div class="mt-4 bg-green-100 p-6 rounded-lg inline-block shadow-md">
+            <p class="text-xl font-semibold text-green-800 capitalize">{{ prediction }}</p>
+        </div>
+        <img src="{{ image_url }}" alt="Uploaded leaf" class="mt-6 mx-auto h-64 rounded-lg shadow-lg">
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

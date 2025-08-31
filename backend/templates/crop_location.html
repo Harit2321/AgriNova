@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-xl shadow-lg">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Crop Recommendation</h1>
+        <p class="text-gray-600 mt-2">Step 1: Enter your location to fetch local weather data.</p>
+    </div>
+    <form method="post" action="{% url 'crop_recommend' %}">
+        {% csrf_token %}
+        <label for="city" class="block text-gray-700 text-sm font-bold mb-2">Enter Your City or Town:</label>
+        <input type="text" name="city" id="city" placeholder="e.g., Nagpur" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition" required>
+        <button type="submit" class="mt-6 w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md transform hover:scale-105">Get Weather & Proceed</button>
+    </form>
+    {% if error %}
+    <div class="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-center">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

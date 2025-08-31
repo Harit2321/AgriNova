@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-xl shadow-lg">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Crop Recommendation</h1>
+        <p class="text-gray-600 mt-2">Step 2: Provide your soil details for a recommendation.</p>
+    </div>
+    <form method="post" action="{% url 'crop_recommend' %}">
+        {% csrf_token %}
+        
+        <input type="hidden" name="city" value="{{ city }}">
+        <input type="hidden" name="temperature" value="{{ temperature }}">
+        <input type="hidden" name="humidity" value="{{ humidity }}">
+
+        <div class="mb-6 bg-green-50 p-4 rounded-lg border border-green-200">
+            <p class="text-gray-800 font-semibold mb-2">Weather data for <strong>{{ city }}</strong>:</p>
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div class="bg-white p-3 rounded-md shadow-sm">
+                    <span class="block text-sm text-gray-500">Temperature</span>
+                    <span class="font-bold text-lg text-green-700">{{ temperature }} °C</span>
+                </div>
+                <div class="bg-white p-3 rounded-md shadow-sm">
+                    <span class="block text-sm text-gray-500">Humidity</span>
+                    <span class="font-bold text-lg text-green-700">{{ humidity }} %</span>
+                </div>
+            </div>
+            {% if using_fallback_rainfall %}
+            <p class="text-xs text-gray-600 mt-3 text-center">Note: Using a regional average of <strong>{{ rainfall }}mm</strong> for rainfall.</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-6">
+            <label for="soil_type" class="block text-gray-700 text-sm font-bold mb-2">Select Your Soil Type:</label>
+            <select name="soil_type" id="soil_type" class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition" required>
+                <option value="">--Please choose an option--</option>
+                {% for type in soil_types %}
+                    <option value="{{ type }}" {% if type == selected_soil %}selected{% endif %}>{{ type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md transform hover:scale-105">Recommend Crop</button>
+    </form>
+
+    {% if prediction %}
+    <div class="mt-8 bg-green-100 border-l-4 border-green-500 text-green-800 p-6 rounded-r-lg shadow-md">
+        <h2 class="text-2xl font-bold">Recommended Crop: <span class="capitalize">{{ prediction }}</span></h2>
+        <p class="mt-2">Based on the provided soil and weather conditions, this crop is predicted to have the best yield.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

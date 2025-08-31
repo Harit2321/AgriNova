@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-xl shadow-lg">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Live Market Prices</h1>
+        <p class="text-gray-600 mt-2">Select your location and crop to get today's live prices from Agmarknet.</p>
+    </div>
+
+    <!-- Search Form -->
+    <form method="post" class="mb-12 bg-gray-50/80 backdrop-blur-md p-6 rounded-lg border">
+        {% csrf_token %}
+        <div class="grid md:grid-cols-3 gap-4">
+            <div>
+                <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+                <select name="state" id="state" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    {% for state in states %}
+                    <option {% if state == selected_state %}selected{% endif %}>{{ state }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="district" class="block text-sm font-medium text-gray-700">District</label>
+                <select name="district" id="district" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    {% for district in districts %}
+                    <option {% if district == selected_district %}selected{% endif %}>{{ district }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="commodity" class="block text-sm font-medium text-gray-700">Crop</label>
+                <select name="commodity" id="commodity" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    {% for commodity in commodities %}
+                    <option {% if commodity == selected_commodity %}selected{% endif %}>{{ commodity }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition duration-300">Search Prices</button>
+    </form>
+
+    <!-- Results Section -->
+    {% if searched %}
+        <h2 class="text-2xl font-bold text-center mb-4">Results for {{ selected_commodity }} in {{ selected_district }}</h2>
+        {% if error %}
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg text-center">
+                <p>No market data found for the selected criteria today. Please try again later or select a different location/crop.</p>
+            </div>
+        {% else %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="p-4 font-semibold text-gray-600">Market</th>
+                        <th class="p-4 font-semibold text-gray-600">Crop</th>
+                        <th class="p-4 font-semibold text-gray-600">Price (per Quintal)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in prices %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4">{{ item.market }}</td>
+                        <td class="p-4">{{ item.crop }}</td>
+                        <td class="p-4 font-semibold text-green-700">{{ item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
